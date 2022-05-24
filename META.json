@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Shopping Cart Exercise",
    "author" : [
       "Ludovic Tolhurst-Cleaver <camel@ltcdev.com>"
    ],
@@ -42,7 +42,8 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "Test::MockModule" : "v0.177.0",
+            "perl" : "5.12"
          }
       },
       "test" : {
@@ -52,6 +53,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ludovic-tc/Cart-Kata/issues"
+      },
+      "homepage" : "https://github.com/ludovic-tc/Cart-Kata",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ludovic-tc/Cart-Kata.git",
+         "web" : "https://github.com/ludovic-tc/Cart-Kata"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:DUMU",
    "x_serialization_backend" : "JSON::PP version 2.27300",

@@ -8,8 +8,7 @@ Cart::Kata - Shopping Cart Exercise
 
 # DESCRIPTION
 
-Cart::Kata offers an implemented solution to the 'cart_kata' Shopping Cart challenge set by SpareRoom, a.k.a. Flatshare Ltd., as part of their recruitment process. 
-
+Cart::Kata is ...
 
 # LICENSE
 

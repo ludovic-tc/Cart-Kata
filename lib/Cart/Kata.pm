@@ -1,9 +1,14 @@
 package Cart::Kata;
-use 5.008001;
-use strict;
-use warnings;
+use Moo;
+use 5.12;
+use strictures 2;
+use namespace::clean;
 
 our $VERSION = "0.01";
+
+sub scan {
+   return; 
+}
 
 
 
@@ -14,7 +19,7 @@ __END__
 
 =head1 NAME
 
-Cart::Kata - It's new $module
+Cart::Kata - Shopping Cart Exercise
 
 =head1 SYNOPSIS
 

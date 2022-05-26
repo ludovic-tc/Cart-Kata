@@ -1,1 +1,1 @@
-[{"code":"A","price":50,"multibuy":"3 for 140"},{"code":"B","price":35,"multibuy":"2 for 60"},{"code":"C","price":25},{"code":"D","price":12}]
+{"A":{"code":"A","price":50,"multibuy":"3 for 140"},"B":{"code":"B","price":35,"multibuy":"2 for 60"},"C":{"code":"C","price":25},"D":{"code":"D","price":12}}

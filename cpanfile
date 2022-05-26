@@ -6,6 +6,5 @@ on 'test' => sub {
 
 requires 'Moo';
 requires 'namespace::clean';
-requires 'strictures';
 requires 'Path::Tiny';
 requires 'JSON::XS';

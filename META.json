@@ -42,8 +42,12 @@
       },
       "runtime" : {
          "requires" : {
-            "Test::MockModule" : "v0.177.0",
-            "perl" : "5.12"
+            "JSON::XS" : "0",
+            "Moo" : "0",
+            "Path::Tiny" : "0",
+            "namespace::clean" : "0",
+            "perl" : "v5.12.0",
+            "strictures" : "0"
          }
       },
       "test" : {

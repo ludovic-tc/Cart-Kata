@@ -1,67 +1,88 @@
 package Cart::Kata;
 use Moo;
-use 5.12;
+use v5.12;
 use strict;
 use Carp;
 use namespace::clean;
 use JSON::XS;
 use Path::Tiny;
-
-use constant BARCODE_DEVICE_AVAILABLE => 0;
+use List::Util qw(sum0);
 
 our $VERSION = "0.01";
 
-has pricelist (
-    is => 'ro';
-    builder => '_get_pricelist';
+has pricelist => (
+    is => 'ro',
+    builder => '_get_pricelist',
 );
 
-has sale_lines (
-    is => 'rw';
+has sale_lines => (
+    is => 'ro',
+    default => sub { return [] },
 );
 
-sub scan {
 
-    my $item_code; 
+sub add_item_line {
 
-    # XXX barcode polling not yet implemented
-    unless (BARCODE_DEVICE_AVAILABLE) {
-        $item_code = STDIN; 
+    my $self = shift;
+    my $order_line = shift;
+
+    # verify code & amt
+    die "Item code '$order_line->{code}' is not a valid code." unless $order_line->{code} =~ /[A-Za-z]+/;
+    die "Quantity '$order_line->{quantity}' is not a whole number." unless $order_line->{quantity} =~ /\d+/;
+
+    # calculate line total
+    my $tariff = $self->pricelist->{$order_line->{code}};
+    if ($tariff->{multibuy}) {
+        my ($deal_amount, $deal_price) = ($tariff->{multibuy} =~ m/(\d+) for (\d+)/);
+        my $multibuys = sprintf('%u', $order_line->{quantity} / $deal_amount);
+        my $remainder_buys = $order_line->{quantity} % $deal_amount;
+        $order_line->{line_price} = $multibuys * $deal_price;
+        $order_line->{line_price} += $remainder_buys * $tariff->{price};
+    } else {
+        $order_line->{line_price} = $order_line->{quantity} * $tariff->{price};
     }
 
-    # data check    
-    unless ($item_code =~ /0-9*/) {
-        carp "Bad item code: $ite_code\nItem codes must be numeric.\n";
-        return; 
-    }
-
-    return $item_code;
-}
-
-sub sell_item {
-    
-    # get code
-    # add to order lines
-    # tot up? no: put in subtotal
+    # add to sale_lines
+    push @{$self->sale_lines}, $order_line;
     
 }
 
 sub subtotal {
 
+    my $self = shift;
     # calc latest subtotal & return
+    my $subtotal = sum0 map {$_->{line_price}} @{$self->sale_lines};
+    #my $subtotal = join ',', map {$_->{line_price}} @{$self->sale_lines};
+    return $subtotal;
 
 }
 
 sub get_json {
-    my $path = shift;
+
+    my ($self, $path) = @_;
     my $jsonfile = path($path);
-    die "JSON file not found\n" unless ($jsonfile->exists && -f $path); 
-    my $jsondata = decode_json($pricefile->slurp_utf8);
-    return $jsondata; 
+    die "JSON file $path not found\n" unless ($jsonfile->exists && -f $path);
+    my $jsondata = decode_json($jsonfile->slurp_utf8);
+    return $jsondata;
+
 }
 
 sub _get_pricelist {
-    return get_json('../data/pricelist.json');
+
+    my $self = shift;
+    my $pricelist = $self->get_json('data/pricelist.json');
+    for my $code (keys %$pricelist) {
+        unless ( $code =~ /[A-Za-z]+/ &&
+            $pricelist->{$code}->{price} =~ /\d+/) {
+            die "Price list is not in a valid format.\n"
+        };
+        if ($pricelist->{$code}->{multibuy}) {
+            unless ( $pricelist->{$code}->{multibuy} =~ /\d+ for \d+/) {
+                die "Price list is not in a valid format.\n"
+            };
+        }
+    }
+    return $pricelist;
 }
 
 1;
